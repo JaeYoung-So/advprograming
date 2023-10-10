@@ -6,6 +6,7 @@ int main() {
 
 	printf("test2");
 
+	printf("notest");
 
 	return 0;
 }
