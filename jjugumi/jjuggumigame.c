@@ -28,12 +28,21 @@ int jjuggumi_init(void) {
 	return 0;
 }
 
+void intro() {
+
+}
+void ending() {
+
+}
+
 int main(void) {
 	jjuggumi_init();
+	intro();
 	sample();
 	//mugunghwa();
 	//nightgame();
 	//juldarigi();
 	//jebi();
+	ending();
 	return 0;
 }

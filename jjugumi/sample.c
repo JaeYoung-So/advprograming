@@ -84,6 +84,7 @@ void move_tail(int player, int nx, int ny) {
 }
 
 void sample(void) {
+
 	sample_init();
 
 	system("cls");
