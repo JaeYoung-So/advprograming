@@ -83,31 +83,40 @@ void move_tail(int player, int nx, int ny) {
 	py[p] = ny;
 }
 
-void sample(void) {
-
+void sample(int get) {
+	
 	sample_init();
 
 	system("cls");
 	display();
-	while (1) {
-		// player 0만 손으로 움직임(4방향)
-		key_t key = get_key();
-		if (key == K_QUIT) {
-			break;
-		}
-		else if (key != K_UNDEFINED) {
-			move_manual(key);
-		}
 
-		// player 1 부터는 랜덤으로 움직임(8방향)
-		for (int i = 1; i < n_player; i++) {
-			if (tick % period[i] == 0) {
-				move_random(i, -1);
-			}
-		}
-
-		display();
-		Sleep(10);
-		tick += 10;
+	if (get == 1) {
+		dialog("게임시작까지");
+		sample(0);
 	}
+	if (get == 0) {
+		while (1) {
+			// player 0만 손으로 움직임(4방향)
+			key_t key = get_key();
+			if (key == K_QUIT) {
+				break;
+			}
+			else if (key != K_UNDEFINED) {
+				move_manual(key);
+			}
+
+			// player 1 부터는 랜덤으로 움직임(8방향)
+			for (int i = 1; i < n_player; i++) {
+				if (tick % period[i] == 0) {
+					move_random(i, -1);
+				}
+			}
+
+			display();
+			Sleep(10);
+			tick += 10;
+
+		}
+	}
+	
 }

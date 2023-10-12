@@ -77,5 +77,30 @@ void print_status(void) {
 }
 
 void dialog(char message[]) {
+	int remaining_time = DIALOG_DURATION_SEC;
 
+	// Create a copy of the front buffer to restore it later
+	//char front_buf_copy[N_ROW][N_COL];
+
+	while (remaining_time >= 0) {
+		// Calculate the position to display the message
+		int message_row = 5;
+		int message_col = 5;
+
+		draw();
+
+		// Display the remaining time and message
+		gotoxy(message_row, message_col);
+		printf("**************************");
+		gotoxy(message_row + 1, message_col);
+		printf("    %s", message);
+		printf(" %d ", remaining_time);
+		gotoxy(message_row + 2, message_col);
+		printf("**************************");
+
+		Sleep(1000); 
+		remaining_time--;
+
+		draw();
+	}
 }
