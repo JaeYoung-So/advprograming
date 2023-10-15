@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <time.h>
+#include <windows.h>
 #include "jjuggumi.h"
 
 #define	DATA_FILE	"jjuggumi.dat"
@@ -29,7 +30,36 @@ int jjuggumi_init(void) {
 }
 
 void intro() {
+	printf("             ___\n");
+	printf("                     .-'   `'.\n");
+	printf("                    /         \\\n");
+	printf("                    |         ;\n");
+	printf("                    |         |           ___.--,\n");
+	printf("           _.._     |0) ~ (0) |    _.---'`__.-( (_.\n");
+	printf("    __.--'`_.. '.__.\\    '--. \\_.-' ,.--'`     `\"\"\"\n");
+	printf("   ( ,.--'`   ',__ /./;  ;, '.__.'`    __\n");
+	printf("  _`) )  .---.__.' / |  |\\   \\__..--\"\"  \"\"\"--.,_\n");
+	printf("  `---' .'.''-._.-'`_./  /\\ '.  \\ _.-~~~````~~~-._`-.__.'\n");
+	printf("        | |  .' _.-' |  |  \\  \\  '.               `~---`\n");
+	printf("         \\ \\/ .'     \\  \\   '. '-._)\n");
+	printf("          \\/ /        \\  \\    `=__`~-.\n");
+	printf("     jgs  / /\\         `) )    / / `\"\".`\\\n");
+	printf("    , _.-'.'\\ \\        / /    ( (     / /\n");
+	printf("     `--~`   ) )    .-'.'      '.'.  | (\n");
+	printf("            (/`    ( (`          ) )  '-;\n");
+	printf("             `      '-;         (-'\n");
 
+	
+	Sleep(2000); 
+	system("cls");
+	
+	printf("*********************************\n");
+	printf("쭈꾸미 게임에 오신 걸 환영합니다.\n");
+	printf("*********************************\n");
+	Sleep(3000);
+
+	system("cls");
+	return 0;
 }
 void ending() {
 
