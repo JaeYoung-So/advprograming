@@ -77,5 +77,27 @@ void print_status(void) {
 }
 
 void dialog(char message[]) {
+	int remaining_time = DIALOG_DURATION_SEC;
 
+	while (remaining_time >= 0) {
+
+		int message_row = 5;
+		int message_col = 5;
+
+		//draw();
+
+		// 화면 출력
+		gotoxy(message_row, message_col);
+		printf("**************************");
+		gotoxy(message_row + 1, message_col);
+		printf("    %s", message);
+		printf(" %d ", remaining_time);
+		gotoxy(message_row + 2, message_col);
+		printf("**************************");
+
+		Sleep(1000); 
+		remaining_time--;
+
+		//draw();
+	}
 }
