@@ -86,7 +86,6 @@ void move_tail(int player, int nx, int ny) {
 void sample(int get) {
 	
 	sample_init();
-
 	system("cls");
 	display();
 
@@ -94,6 +93,7 @@ void sample(int get) {
 		dialog("게임시작까지");
 		sample(0);
 	}
+	
 	if (get == 0) {
 		while (1) {
 			// player 0만 손으로 움직임(4방향)
