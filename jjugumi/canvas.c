@@ -80,13 +80,13 @@ void dialog(char message[]) {
 	int remaining_time = DIALOG_DURATION_SEC;
 
 	while (remaining_time >= 0) {
-		// Calculate the position to display the message
+
 		int message_row = 5;
 		int message_col = 5;
 
 		//draw();
 
-		// Display the remaining time and message
+		// 화면 출력
 		gotoxy(message_row, message_col);
 		printf("**************************");
 		gotoxy(message_row + 1, message_col);
