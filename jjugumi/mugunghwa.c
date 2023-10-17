@@ -64,3 +64,6 @@ void move_tail(int player, int nx, int ny) {
 	py[p] = ny;
 }
 
+void mugunghwa(void) {
+
+}
