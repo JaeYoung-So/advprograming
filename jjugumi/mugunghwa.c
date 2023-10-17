@@ -19,7 +19,7 @@ void move_manual(key_t key) {
 	// 각 방향으로 움직일 때 x, y값 delta
 	static int dx[4] = { -1, 1, 0, 0 };
 	static int dy[4] = { 0, 0, -1, 1 };
-
+	 
 	int dir;  // 움직일 방향(0~3)
 	switch (key) {
 	case K_UP: dir = DIR_UP; break;
