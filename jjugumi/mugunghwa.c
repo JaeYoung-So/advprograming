@@ -14,9 +14,9 @@ void move_tail(int i, int nx, int ny);
 
 int px[PLAYER_MAX], py[PLAYER_MAX], period[PLAYER_MAX];  // 각 플레이어 위치, 이동 주기
 
-
+void mugung_init(void);
 void mugung_init(void) {
-	map_init(20, 50);
+	map_init(20, 45);
 	int x, y;
 	for (int i = 0; i < n_player; i++) {
 		// 같은 자리가 나오면 다시 생성
@@ -33,7 +33,6 @@ void mugung_init(void) {
 
 	tick = 0;
 }
-
 void move_manual(key_t key) {
 	// 각 방향으로 움직일 때 x, y값 delta
 	static int dx[4] = { -1, 1, 0, 0 };
@@ -83,6 +82,32 @@ void move_tail(int player, int nx, int ny) {
 	py[p] = ny;
 }
 
-void mugunghwa(void) {
+void mugunghwa() {
 	mugung_init();
+	system("cls");
+	display();
+		
+	while (1) {
+		// player 0만 손으로 움직임(4방향)
+		key_t key = get_key();
+		if (key == K_QUIT) {
+			break;
+		}
+		else if (key != K_UNDEFINED) {
+			move_manual(key);
+		}
+
+		// player 1 부터는 랜덤으로 움직임(8방향)
+		for (int i = 1; i < n_player; i++) {
+			if (tick % period[i] == 0) {
+				move_random(i, -1);
+			}
+		}
+
+		display();
+		Sleep(10);
+		tick += 10;
+
+	}
 }
+
