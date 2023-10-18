@@ -13,7 +13,7 @@ int tick;  // 시계
 // 미니게임
 void sample(int get);
 void mugunghwa(void);
-//void mugunghwa(void);
+void mugunghwa(void);
 //void nightgame(void);
 //void juldarigi(void);
 //void jebi(void);

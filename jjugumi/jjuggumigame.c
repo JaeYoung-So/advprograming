@@ -68,8 +68,8 @@ void ending() {
 int main(void) {
 	jjuggumi_init();
 	intro();
-	sample(1);
-	//mugunghwa();
+	//sample(1);
+	mugunghwa();
 	//nightgame();
 	//juldarigi();
 	//jebi();
