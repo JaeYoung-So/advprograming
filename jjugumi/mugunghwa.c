@@ -161,7 +161,7 @@ void mugunghwa() {
 						move_random(i, -1);
 					}
 				}
-			}
+			} 
 			
 
 			display();
