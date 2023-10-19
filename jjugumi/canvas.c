@@ -98,3 +98,27 @@ void dialog(char message[]) {
 
 	}
 }
+//킬로그표시
+void killdialog(char message[]) {
+	
+	int message_row = 5;
+	int message_col = 5;
+
+	// 화면 출력
+	gotoxy(message_row, message_col);
+	printf("****************************************");
+	gotoxy(message_row + 1, message_col);
+	printf("     % s",message);
+	gotoxy(message_row + 2, message_col);
+	printf("****************************************");
+
+	Sleep(3000);
+
+	gotoxy(message_row, message_col);
+	printf("                                        ");
+	gotoxy(message_row + 1, message_col);
+	printf("                                        ");
+	gotoxy(message_row + 2, message_col);
+	printf("                                        ");
+
+}
