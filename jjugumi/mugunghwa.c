@@ -167,7 +167,7 @@ void mugunghwa() {
 			display();
 			Sleep(10);
 			tick += 10;
-			
+
 		}
 }
 
