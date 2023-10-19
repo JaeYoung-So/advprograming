@@ -8,12 +8,61 @@
 #define DIR_LEFT	2
 #define DIR_RIGHT	3
 
+void mugung_init(void);
 void move_manual(key_t key);
 void move_random(int i, int dir);
 void move_tail(int i, int nx, int ny);
 
 int px[PLAYER_MAX], py[PLAYER_MAX], period[PLAYER_MAX];  // 각 플레이어 위치, 이동 주기
 
+void mugung_init(void) {
+	map_init(15, 50);
+	int x, y;
+
+	px[0] = (N_ROW / 2) - 1;
+	py[0] = 1;
+	back_buf[px[0]][py[0]] = '@';
+	px[0] = N_ROW / 2;
+	py[0] = 1;
+	back_buf[px[0]][py[0]] = '@';
+	px[0] = (N_ROW / 2) + 1;
+	py[0] = 1;
+	back_buf[px[0]][py[0]] = '@';
+
+	
+	
+	for (int i = 0; i < n_player; i++) {
+		// 같은 자리가 나오면 다시 생성
+		do {
+			x = randint(1, N_ROW - 2);
+			y = 48;
+		} while (!placable(x, y));
+		px[i] = x;
+		py[i] = y;
+		period[i] = randint(100, 500);
+
+		back_buf[px[i]][py[i]] = '0' + i;  // (0 .. n_player-1)
+		x++;
+	}
+
+	tick = 0;
+	
+}
+
+void mugung_set(void) {
+	map_init(15, 50);
+	int x, y;
+
+	px[0] = (N_ROW / 2) - 1;
+	py[0] = 1;
+	back_buf[px[0]][py[0]] = '@';
+	px[0] = N_ROW / 2;
+	py[0] = 1;
+	back_buf[px[0]][py[0]] = '@';
+	px[0] = (N_ROW / 2) + 1;
+	py[0] = 1;
+	back_buf[px[0]][py[0]] = '@';
+}
 
 void move_manual(key_t key) {
 	// 각 방향으로 움직일 때 x, y값 delta
@@ -48,8 +97,28 @@ void move_random(int player, int dir) {
 	// 움직일 공간이 없는 경우는 없다고 가정(무한 루프에 빠짐)	
 
 	do {
-		nx = px[p] + randint(-1, 1);
-		ny = py[p] + randint(-1, 1);
+		int random_num = randint(1, 10);
+
+		if (random_num == 1) {
+			// 10% 확률로 가만히 있음
+			nx = px[p];
+			ny = py[p];
+		}
+		else if (random_num == 2) {
+			// 10% 확률로 위로 이동
+			nx = px[p] - 1;
+			ny = py[p];
+		}
+		else if (random_num == 3) {
+			// 10% 확률로 아래로 이동
+			nx = px[p] + 1;
+			ny = py[p];
+		}
+		else {
+			// 나머지 경우에는 왼쪽으로 이동
+			nx = px[p];
+			ny = py[p] - 1;
+		}
 	} while (!placable(nx, ny));
 
 	move_tail(p, nx, ny);
@@ -62,5 +131,39 @@ void move_tail(int player, int nx, int ny) {
 	back_buf[px[p]][py[p]] = ' ';
 	px[p] = nx;
 	py[p] = ny;
+}
+
+void mugunghwa() {
+
+	mugung_set();
+	display();
+	dialog("무궁화꽃이 피었습니다를 시작합니다.");
+	system("cls");
+	mugung_init();
+	display();
+
+		while (1) {
+
+			// player 0만 손으로 움직임(4방향)
+			key_t key = get_key();
+			if (key == K_QUIT) {
+				break;
+			}
+			else if (key != K_UNDEFINED) {
+				move_manual(key);
+			}
+
+			// player 1 부터는 랜덤으로 움직임(8방향)
+			for (int i = 1; i < n_player; i++) {
+				if (tick % period[i] == 0) {
+					move_random(i, -1);
+				}
+			}
+
+			display();
+			Sleep(10);
+			tick += 10;
+
+		}
 }
 

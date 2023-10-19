@@ -30,7 +30,8 @@ int jjuggumi_init(void) {
 }
 
 void intro() {
-	printf("             ___\n");
+	system("cls");
+	printf("                        ___\n");
 	printf("                     .-'   `'.\n");
 	printf("                    /         \\\n");
 	printf("                    |         ;\n");
@@ -43,7 +44,7 @@ void intro() {
 	printf("        | |  .' _.-' |  |  \\  \\  '.               `~---`\n");
 	printf("         \\ \\/ .'     \\  \\   '. '-._)\n");
 	printf("          \\/ /        \\  \\    `=__`~-.\n");
-	printf("     jgs  / /\\         `) )    / / `\"\".`\\\n");
+	printf("          / /\\         `) )    / / `\"\".`\\\n");
 	printf("    , _.-'.'\\ \\        / /    ( (     / /\n");
 	printf("     `--~`   ) )    .-'.'      '.'.  | (\n");
 	printf("            (/`    ( (`          ) )  '-;\n");
@@ -51,15 +52,13 @@ void intro() {
 
 	
 	Sleep(2000); 
-	system("cls");
 	
-	printf("*********************************\n");
-	printf("쭈꾸미 게임에 오신 걸 환영합니다.\n");
-	printf("*********************************\n");
+	printf("          *********************************\n");
+	printf("          쭈꾸미 게임에 오신 걸 환영합니다.\n");
+	printf("          *********************************\n");
 	Sleep(3000);
 
 	system("cls");
-	return 0;
 }
 void ending() {
 
@@ -68,11 +67,11 @@ void ending() {
 int main(void) {
 	jjuggumi_init();
 	intro();
-	sample(1);
-	//mugunghwa();
+	//sample(1);
+	mugunghwa();
 	//nightgame();
 	//juldarigi();
 	//jebi();
-	ending();
+	//ending();
 	return 0;
 }
