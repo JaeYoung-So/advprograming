@@ -72,14 +72,12 @@ void draw(void) {
 void print_status(void) {
 	printf("no. of players left: %d\n", n_alive);
 	for (int p = 0; p < n_player; p++) {
-		printf("player %2d: %5s\n", p, player[p] ? "alive" : "DEAD");		
+		printf("player %2d: %5s\n", p, player[p] ? "alive" : "DEAD");
 	}
 }
 
 void dialog(char message[]) {
 	int remaining_time = DIALOG_DURATION_SEC;
-
-	
 
 	while (remaining_time >= 0) {
 
@@ -88,15 +86,39 @@ void dialog(char message[]) {
 
 		// 화면 출력
 		gotoxy(message_row, message_col);
-		printf("******************************");
+		printf("****************************************");
 		gotoxy(message_row + 1, message_col);
-		printf("%s", message);
-		printf("%d ", remaining_time);
+		printf("% s", message);
+		printf(" %d ", remaining_time);
 		gotoxy(message_row + 2, message_col);
-		printf("******************************");
-		
-		Sleep(1000); 
+		printf("****************************************");
+
+		Sleep(1000);
 		remaining_time--;
 
 	}
+}
+//킬로그표시
+void killdialog(char message[]) {
+
+	int message_row = 5;
+	int message_col = 5;
+
+	// 화면 출력
+	gotoxy(message_row, message_col);
+	printf("****************************************");
+	gotoxy(message_row + 1, message_col);
+	printf("     % s", message);
+	gotoxy(message_row + 2, message_col);
+	printf("****************************************");
+
+	Sleep(3000);
+
+	gotoxy(message_row, message_col);
+	printf("                                        ");
+	gotoxy(message_row + 1, message_col);
+	printf("                                        ");
+	gotoxy(message_row + 2, message_col);
+	printf("                                        ");
+
 }
