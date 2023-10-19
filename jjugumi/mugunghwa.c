@@ -68,12 +68,15 @@ void say_mugung(int time) {
 			if (randdom_num == 1) {
 				if (randdom_move >= 1 && randdom_move <= 3) {
 					move_random(i, DIR_LEFT);
+					
 				}
 				else if (randdom_move >= 4 && randdom_move <= 7) {
-					move_random(i, DIR_RIGHT);
+					move_random(i, DIR_UP);
+					
 				}
 				else {
 					move_random(i, DIR_DOWN);
+					
 				}
 			}
 

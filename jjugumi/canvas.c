@@ -90,8 +90,8 @@ void dialog(char message[]) {
 		gotoxy(message_row, message_col);
 		printf("******************************");
 		gotoxy(message_row + 1, message_col);
-		printf("% s", message);
-		printf(" %d ", remaining_time);
+		printf("%s", message);
+		printf("%d ", remaining_time);
 		gotoxy(message_row + 2, message_col);
 		printf("******************************");
 		
