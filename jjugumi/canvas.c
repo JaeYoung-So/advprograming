@@ -79,6 +79,8 @@ void print_status(void) {
 void dialog(char message[]) {
 	int remaining_time = DIALOG_DURATION_SEC;
 
+	
+
 	while (remaining_time >= 0) {
 
 		int message_row = 5;
@@ -92,7 +94,7 @@ void dialog(char message[]) {
 		printf(" %d ", remaining_time);
 		gotoxy(message_row + 2, message_col);
 		printf("******************************");
-
+		
 		Sleep(1000); 
 		remaining_time--;
 
