@@ -153,12 +153,16 @@ void mugunghwa() {
 				move_manual(key);
 			}
 
+			
 			// player 1 부터는 랜덤으로 움직임(8방향)
-			for (int i = 1; i < n_player; i++) {
-				if (tick % period[i] == 0) {
-					move_random(i, -1);
+			if (tick >= 500) {
+				for (int i = 1; i < n_player; i++) {
+					if (tick % period[i] == 0) {
+						move_random(i, -1);
+					}
 				}
 			}
+			
 
 			display();
 			Sleep(10);
@@ -166,4 +170,6 @@ void mugunghwa() {
 
 		}
 }
+
+
 
