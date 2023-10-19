@@ -86,12 +86,12 @@ void dialog(char message[]) {
 
 		// 화면 출력
 		gotoxy(message_row, message_col);
-		printf("******************************");
+		printf("****************************************");
 		gotoxy(message_row + 1, message_col);
 		printf("% s", message);
 		printf(" %d ", remaining_time);
 		gotoxy(message_row + 2, message_col);
-		printf("******************************");
+		printf("****************************************");
 
 		Sleep(1000); 
 		remaining_time--;

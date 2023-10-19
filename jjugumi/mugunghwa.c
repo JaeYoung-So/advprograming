@@ -15,19 +15,70 @@ void move_tail(int i, int nx, int ny);
 
 int px[PLAYER_MAX], py[PLAYER_MAX], period[PLAYER_MAX];  // 각 플레이어 위치, 이동 주기
 
+// "무궁화꽃이피었습니다"를 저장한 문자열
+char mugung_text[] = "무궁화꽃이피었습니다";
+int mugung_index = 0;  // 현재 출력할 문자의 인덱스
+int delay = 300;  // 출력 간격(ms), 초기 값: 300ms
+
+void say_mugung(int time) {
+
+	if (time == 500) {
+		gotoxy(17, 0);
+		printf("무                                                        ");
+	}
+	if (time == 650) {
+		gotoxy(17, 0);
+		printf("무 궁                                                     ");
+	}
+	if (time == 850) {
+		gotoxy(17, 0);
+		printf("무 궁 화                                                  ");
+	}
+	if (time == 1100) {
+		gotoxy(17, 0);
+		printf("무 궁 화 꽃                                               ");
+	}
+	if (time == 1500) {
+		gotoxy(17, 0);
+		printf("무 궁 화 꽃 이                                            ");
+	}
+	if (time == 1800) {
+		gotoxy(17, 0);
+		printf("무 궁 화 꽃 이  피                                        ");
+	}
+	if (time == 2050) {
+		gotoxy(17, 0);
+		printf("무 궁 화 꽃 이  피 었                                     ");
+	}
+	if (time == 2270) {
+		gotoxy(17, 0);
+		printf("무 궁 화 꽃 이  피 었 습 니                               ");
+	}
+	if (time == 2370) {
+		gotoxy(17, 0);
+		printf("무 궁 화 꽃 이  피 었 습 니 다!                           ");
+		back_buf[(N_ROW / 2) - 1][1] = '#';
+		back_buf[(N_ROW / 2)][1] = '#'; 
+		back_buf[(N_ROW / 2) + 1][1] = '#';
+	}
+	if (time == 3500) {
+		back_buf[(N_ROW / 2) - 1][1] = '@';
+		back_buf[(N_ROW / 2)][1] = '@';
+		back_buf[(N_ROW / 2) + 1][1] = '@';
+		gotoxy(17, 0);
+		printf("                                                          ");
+	}
+}
+
 void mugung_init(void) {
 	map_init(15, 50);
 	int x, y;
 
 	px[0] = (N_ROW / 2) - 1;
 	py[0] = 1;
-	back_buf[px[0]][py[0]] = '@';
-	px[0] = N_ROW / 2;
-	py[0] = 1;
-	back_buf[px[0]][py[0]] = '@';
-	px[0] = (N_ROW / 2) + 1;
-	py[0] = 1;
-	back_buf[px[0]][py[0]] = '@';
+	back_buf[(N_ROW / 2) - 1][1] = '@';
+	back_buf[(N_ROW / 2)][1] = '@';
+	back_buf[(N_ROW / 2) + 1][1] = '@';
 
 	
 	
@@ -55,13 +106,9 @@ void mugung_set(void) {
 
 	px[0] = (N_ROW / 2) - 1;
 	py[0] = 1;
-	back_buf[px[0]][py[0]] = '@';
-	px[0] = N_ROW / 2;
-	py[0] = 1;
-	back_buf[px[0]][py[0]] = '@';
-	px[0] = (N_ROW / 2) + 1;
-	py[0] = 1;
-	back_buf[px[0]][py[0]] = '@';
+	back_buf[(N_ROW / 2) - 1][1] = '@';
+	back_buf[(N_ROW / 2)][1] = '@';
+	back_buf[(N_ROW / 2) + 1][1] = '@';
 }
 
 void move_manual(key_t key) {
@@ -163,11 +210,14 @@ void mugunghwa() {
 				}
 			} 
 			
-
+			say_mugung(tick);
 			display();
-			Sleep(10);
+			Sleep(25);
 			tick += 10;
-
+			if (tick >= 4000) {
+				tick = 500;
+			}
+			printf("%d", tick);
 		}
 }
 
