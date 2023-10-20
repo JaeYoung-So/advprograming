@@ -18,6 +18,7 @@ bool getlife(int i);
 
 int px[PLAYER_MAX], py[PLAYER_MAX], period[PLAYER_MAX];  // 각 플레이어 위치, 이동 주기
 int diedplayer[PLAYER_MAX];
+int clearplayer[PLAYER_MAX];
 //char diedmesseage[100];
 
 void say_mugung(int time) {
@@ -180,6 +181,7 @@ void move_random(int player, int dir) {
 		move_tail(p, nx, ny);
 	}
 
+	
 }
 
 //10프로 확률로만 움직임
@@ -286,6 +288,18 @@ void kill_tail(int player, int nx, int ny) {
 	kill_false(p);
 }
 
+void safe_tail(int player, int nx, int ny) {
+	int p = player;  // 이름이 길어서...
+	back_buf[nx][ny] = ' ';
+	back_buf[px[p]][py[p]] = ' ';
+	px[p] = nx;
+	py[p] = ny;
+	
+	clearplayer[p] = 1;
+	
+	
+}
+
 // back_buf[][]에 기록
 void move_tail(int player, int nx, int ny) {
 	int p = player;  // 이름이 길어서...
@@ -293,6 +307,8 @@ void move_tail(int player, int nx, int ny) {
 	back_buf[px[p]][py[p]] = ' ';
 	px[p] = nx;
 	py[p] = ny;
+	
+	
 }
 //죽으면 false로 바꿔주는 함수
 void kill_false(int p) {
@@ -367,6 +383,13 @@ void mugunghwa() {
 		else if (tick == 2450) {
 			for (int i = 1; i < n_player; i++) {
 				move_stop(i, 0);
+			}
+		}
+
+		for (int i = 0; i < n_player; i++) {
+			if (clearplayer[i] == 1) {
+				printf("Player %d cleared the game!\n", i);
+				clearplayer[i] = 0; // 클리어 상태 초기화
 			}
 		}
 
