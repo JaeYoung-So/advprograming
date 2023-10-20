@@ -15,7 +15,7 @@ void move_tail(int i, int nx, int ny);
 void kill_tail(int i, int nx, int ny);
 void kill_false(int i);
 bool getlife(int i);
-
+void safe_tail(int i, int nx, int ny);
 int px[PLAYER_MAX], py[PLAYER_MAX], period[PLAYER_MAX];  // 각 플레이어 위치, 이동 주기
 int diedplayer[PLAYER_MAX];
 int clearplayer[PLAYER_MAX];
@@ -133,7 +133,17 @@ void move_manual(key_t key) {
 		return;
 	}
 
-	move_tail(0, nx, ny);
+	if (back_buf[(N_ROW / 2) - 2][1] == '0' || back_buf[(N_ROW / 2) + 2][1] == '0' || back_buf[(N_ROW / 2) - 1][2] == '0' ||
+		back_buf[(N_ROW / 2) - 1][2] == '0' || back_buf[(N_ROW / 2) + 1][2] == '0') {
+		safe_tail(0, nx, ny);
+	}
+	else {
+		move_tail(0, nx, ny);
+	}
+	
+
+
+
 }
 
 bool getlife(int p) {
@@ -150,6 +160,7 @@ void move_random(int player, int dir) {
 	int nx, ny;  // 움직여서 다음에 놓일 자리
 	bool life;
 	life = getlife(p);
+	char p2 = (char)p;
 
 	// 움직일 공간이 없는 경우는 없다고 가정(무한 루프에 빠짐)	
 	if (life == true) {
@@ -178,61 +189,19 @@ void move_random(int player, int dir) {
 			}
 		} while (!placable(nx, ny));
 
-		move_tail(p, nx, ny);
-	}
-
-	
-}
-
-//10프로 확률로만 움직임
-/*
-void move_stop(int player, int dir) {
-	int p = player;  // 이름이 길어서...
-	int nx, ny;  // 움직여서 다음에 놓일 자리
-	int kill = 0;
-	bool life = true;
-	life = getlife(p);
-	// 움직일 공간이 없는 경우는 없다고 가정(무한 루프에 빠짐)
-	if (life == true) {
-		do {
-			int random_num = randint(1, 10);
-			if (random_num == 1) {
-				int random_num2 = randint(1, 10);
-				if (random_num2 == 1) {
-					// 10% 확률로 위로 이동
-					nx = px[p] - 1;
-					ny = py[p];
-				}
-				else if (random_num2 == 2) {
-					// 10% 확률로 아래로 이동
-					nx = px[p] + 1;
-					ny = py[p];
-				}
-				else {
-					// 나머지 경우에는 왼쪽으로 이동
-					nx = px[p];
-					ny = py[p] - 1;
-				}
-				kill = 1;
-			}
-			else {
-				// 나머지 경우에는 정지
-				nx = px[p];
-				ny = py[p];
-			}
-		} while (!placable(nx, ny));
-
-		if (kill == 1) {
-			kill_tail(p, nx, ny);
-			kill  = 0;
+		if (back_buf[(N_ROW / 2) - 2][1] == p2 || back_buf[(N_ROW / 2) + 2][1] == p2 || back_buf[(N_ROW / 2) - 1][2] == p2 ||
+			back_buf[(N_ROW / 2) - 1][2] == p2 || back_buf[(N_ROW / 2) + 1][2] == p2) {
+			safe_tail(p, nx, ny);
 		}
 		else {
 			move_tail(p, nx, ny);
-			kill = 0;
 		}
 	}
+	
+
 }
-*/
+
+
 void move_stop(int player, int dir) {
 	int p = player;
 	int nx, ny;
@@ -269,7 +238,7 @@ void move_stop(int player, int dir) {
 
 		if (placable(nx, ny)) {
 			if (kill == 1) {
-				kill_tail(p, nx, ny);
+				//kill_tail(p, nx, ny);
 			}
 			else {
 				move_tail(p, nx, ny);
@@ -294,10 +263,8 @@ void safe_tail(int player, int nx, int ny) {
 	back_buf[px[p]][py[p]] = ' ';
 	px[p] = nx;
 	py[p] = ny;
-	
+
 	clearplayer[p] = 1;
-	
-	
 }
 
 // back_buf[][]에 기록
@@ -307,8 +274,8 @@ void move_tail(int player, int nx, int ny) {
 	back_buf[px[p]][py[p]] = ' ';
 	px[p] = nx;
 	py[p] = ny;
-	
-	
+
+
 }
 //죽으면 false로 바꿔주는 함수
 void kill_false(int p) {
@@ -335,6 +302,7 @@ void mugunghwa() {
 		}
 		else if (key != K_UNDEFINED) {
 			move_manual(key);
+
 		}
 
 
@@ -376,6 +344,7 @@ void mugunghwa() {
 				sprintf_s(fullMessage, sizeof(fullMessage), "%d player, %s dead! ", n_alive, deadPlayersMessage);
 				killdialog(fullMessage);
 			}
+
 		}
 
 
@@ -388,7 +357,7 @@ void mugunghwa() {
 
 		for (int i = 0; i < n_player; i++) {
 			if (clearplayer[i] == 1) {
-				printf("Player %d cleared the game!\n", i);
+				
 				clearplayer[i] = 0; // 클리어 상태 초기화
 			}
 		}
