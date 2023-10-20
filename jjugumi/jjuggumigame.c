@@ -8,8 +8,10 @@
 
 #define	DATA_FILE	"jjuggumi.dat"
 
+char messeage[100];
 int jjuggumi_init(void);
 
+void ending(char mes[]);
 // low 이상 high 이하 난수를 발생시키는 함수
 int randint(int low, int high) {
 	int rnum = rand() % (high - low + 1) + low;
@@ -60,11 +62,16 @@ void intro() {
 
 	system("cls");
 }
-void ending() {
+void ending(char messeage[]) {
+	system("cls");
+	printf("          *********************************\n");
+	printf("           %s 번 플레이어가 승리하였습니다.\n",messeage);
+	printf("          *********************************\n");
+	Sleep(3000);
 
 }
-
 int main(void) {
+	char gammer[100];
 	jjuggumi_init();
 	intro();
 	//sample(1);
@@ -72,6 +79,6 @@ int main(void) {
 	//nightgame();
 	//juldarigi();
 	//jebi();
-	//ending();
+	ending(messeage);
 	return 0;
 }

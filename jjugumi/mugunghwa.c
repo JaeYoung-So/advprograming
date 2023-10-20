@@ -16,10 +16,16 @@ void kill_tail(int i, int nx, int ny);
 void kill_false(int i);
 bool getlife(int i);
 bool get_safezone(int i,int nx, int ny);
+void safe_tail(int player, int nx, int ny);
+void safe_win();
 
 int px[PLAYER_MAX], py[PLAYER_MAX], period[PLAYER_MAX];  // 각 플레이어 위치, 이동 주기
 int diedplayer[PLAYER_MAX];
-//char diedmesseage[100];
+int safeplayer[PLAYER_MAX];
+int winplayer[PLAYER_MAX];
+int s_num = 0;
+int livecount;
+
 
 void say_mugung(int time) {
 
@@ -103,6 +109,22 @@ void mugung_init(void) {
 	
 }
 
+void safe_win() {
+	for (int i = 0; i < n_player; i++) {
+		if (getlife(i) == true) {
+			int new_x = px[i];
+			int new_y = py[i];
+
+			if (back_buf[new_x][new_y - 1] == '@' || back_buf[new_x][new_y + 1] == '@' ||
+				back_buf[new_x - 1][new_y] == '@' || back_buf[new_x + 1][new_y] == '@') {
+
+				safeplayer[s_num] = i;
+				s_num++;
+				safe_tail(i, px[i], py[i]);
+			}
+		}
+	}	
+}
 void mugung_set(void) {
 	map_init(15, 50);
 
@@ -172,7 +194,6 @@ bool get_safezone(int p,int nx,int ny) {
 	int safe_buf[ROW_MAX][COL_MAX] = { 0 }; // 배열 초기화
 	int move_buf[ROW_MAX][COL_MAX] = { 0 }; // 배열 초기화
 	move_buf[nx][ny] = 1;
-	int ux;
 
 	for (int i = 0; i < n_player; i++) {
 		if (player[i] == true) {
@@ -284,6 +305,7 @@ void move_stop(int player, int dir) {
 			}
 		}
 	}
+	
 }
 
 // back_buf[][]에 죽은기록
@@ -310,9 +332,15 @@ void kill_false(int p) {
 	n_alive--;
 	diedplayer[p] = p;
 }
+void safe_tail(int p, int nx, int ny) {
+	back_buf[nx][ny] = ' ';
+	player[p] = false;
+	win[p] = true;
+	livecount++;
+}
 
 void mugunghwa() {
-
+	int num;
 	mugung_set();
 	display();
 	dialog("무궁화꽃이 피었습니다를 시작합니다.");
@@ -320,74 +348,112 @@ void mugunghwa() {
 	mugung_init();
 	display();
 	//test 
-		while (1) {
-
-			// player 0만 손으로 움직임(4방향)
-			key_t key = get_key();
-			if (key == K_QUIT) {
-				break;
+	while (1) {
+		if (n_alive == 1) {
+			win[0] = true;
+			break;
+		}
+		if (n_alive == livecount) {
+			break;
+		}
+		// player 0만 손으로 움직임(4방향)
+		key_t key = get_key();
+		if (key == K_QUIT) {
+			for (int i = 0; i < n_player; i++) {
+				if (player[i] == true) {
+					win[i] = true;
+				}
 			}
-			else if (key != K_UNDEFINED) {
-				move_manual(key,tick);
-			}
-
-			
-			// player 1 부터는 랜덤으로 움직임(8방향)
-			if (tick < 2450 && tick >= 500) {
-				for (int i = 1; i < n_player; i++) {
-					if (tick % period[i] == 0) {
-						move_random(i, -1);
+			break;
+		}
+		else if (key != K_UNDEFINED) {
+			move_manual(key, tick);
+		}
+		
+		// player 1 부터는 랜덤으로 움직임(8방향)
+		if (tick < 2450 && tick >= 500) {
+			for (int i = 1; i < n_player; i++) {
+				if (safeplayer[i] != i) {
+					if (period[i] != 0) {
+						if (tick % period[i] == 0) {
+							move_random(i, -1);
+						}
+						else if (tick % period[i] == 1) {
+							move_random(i, -1);
+						}
+						else if (tick % period[i] == 2) {
+								move_random(i, -1);
+						}
+						else if (tick % period[i] == 3) {
+							move_random(i, -1);
+						}
+						else if (tick % period[i] == 4) {
+							move_random(i, -1);
+						}
 					}
 				}
 			}
+		}
 			
 			
-			else if (tick >= 2460) {
+		else if (tick >= 2460) {
 
-				char deadPlayersMessage[100] = "";
-				int numDeadPlayers = 0;
+			char deadPlayersMessage[100] = "";
+			int numDeadPlayers = 0;
 
-				for (int i = 1; i < n_player; i++) {
-					if (diedplayer[i] != 0) {
-						if (numDeadPlayers > 0) {
-							strcat_s(deadPlayersMessage, sizeof(deadPlayersMessage), ", ");
-						}
-
-						char playerNumber[10];
-						if (_itoa_s(diedplayer[i], playerNumber, sizeof(playerNumber), 10) != 0) {
-							// 에러 처리 (변환 실패)
-						}
-
-						strcat_s(deadPlayersMessage, sizeof(deadPlayersMessage), playerNumber);
-						numDeadPlayers++;
-
-						diedplayer[i] = 0; // 출력했으니 초기화
+			for (int i = 1; i < n_player; i++) {
+				if (diedplayer[i] != 0) {
+					if (numDeadPlayers > 0) {
+						strcat_s(deadPlayersMessage, sizeof(deadPlayersMessage), ", ");
 					}
-				}
 
-				if (numDeadPlayers > 0) {
-					char fullMessage[100] = "";
-					sprintf_s(fullMessage, sizeof(fullMessage), "%d player, %s dead! ", n_alive, deadPlayersMessage);
-					killdialog(fullMessage);
+					char playerNumber[10];
+					if (_itoa_s(diedplayer[i], playerNumber, sizeof(playerNumber), 10) != 0) {
+						// 에러 처리 (변환 실패)
+					}
+
+					strcat_s(deadPlayersMessage, sizeof(deadPlayersMessage), playerNumber);
+					numDeadPlayers++;
+
+					diedplayer[i] = 0; // 출력했으니 초기화
 				}
 			}
 
+			if (numDeadPlayers > 0) {
+				char fullMessage[100] = "";
+				sprintf_s(fullMessage, sizeof(fullMessage), "%d player, %s dead! ", n_alive, deadPlayersMessage);
+				killdialog(fullMessage);
+			}
+		}
 
-
-			else if (tick == 2450) {
-				for (int i = 1; i < n_player; i++) {
+		else if (tick == 2450) {
+			for (int i = 0; i < n_player; i++) {
+				if (safeplayer[i] != i) {
 					move_stop(i, 0);
 				}
 			}
-			
-			say_mugung(tick);
-			display();
-			Sleep(10);
-			tick += 10;
-
-			if (tick > 4000) {
-				tick = 500;
-			}
-			//printf("%d", tick);
 		}
+
+		safe_win();
+
+		say_mugung(tick);
+		display();
+		Sleep(10);
+		tick += 10;
+
+		if (tick > 4000) {
+			tick = 500;
+		}
+	}
+	for (int i = 0; i < n_player; i++) {
+		if (win[i] == true) {
+			char playerNumber[10];
+			sprintf_s(playerNumber, sizeof(playerNumber), "%d", i); // 정수를 문자열로 변환
+			strcat_s(messeage, sizeof(messeage), playerNumber);
+			strcat_s(messeage, sizeof(messeage), ", "); // 쉼표와 공백을 추가
+		}
+	}
+	if (strlen(messeage) > 0) {
+		messeage[strlen(messeage) - 2] = '\0';
+	}
 }

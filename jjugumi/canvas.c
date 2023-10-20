@@ -72,7 +72,13 @@ void draw(void) {
 void print_status(void) {
 	printf("no. of players left: %d\n", n_alive);
 	for (int p = 0; p < n_player; p++) {
-		printf("player %2d: %5s\n", p, player[p] ? "alive" : "DEAD");		
+		if (win[p] == true) {
+			printf("player %2d: %5s\n", p, win[p] ? "Win" : "false");
+		}
+		else {
+			printf("player %2d: %5s\n", p, player[p] ? "alive" : "DEAD");
+		}
+		
 	}
 }
 
