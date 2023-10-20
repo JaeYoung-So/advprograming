@@ -9,12 +9,13 @@
 #define DIR_RIGHT	3
 
 void mugung_init(void);
-void move_manual(key_t key);
+void move_manual(key_t key, int t);
 void move_random(int i, int dir);
 void move_tail(int i, int nx, int ny);
 void kill_tail(int i, int nx, int ny);
 void kill_false(int i);
 bool getlife(int i);
+bool get_safezone(int i,int nx, int ny);
 
 int px[PLAYER_MAX], py[PLAYER_MAX], period[PLAYER_MAX];  // 각 플레이어 위치, 이동 주기
 int diedplayer[PLAYER_MAX];
@@ -110,10 +111,13 @@ void mugung_set(void) {
 	back_buf[(N_ROW / 2) + 1][1] = '@';
 }
 
-void move_manual(key_t key) {
+void move_manual(key_t key,int tick) {
 	// 각 방향으로 움직일 때 x, y값 delta
 	static int dx[4] = { -1, 1, 0, 0 };
 	static int dy[4] = { 0, 0, -1, 1 };
+
+	bool life;
+	life = getlife(0);
 
 	int dir;  // 움직일 방향(0~3)
 	switch (key) {
@@ -128,11 +132,31 @@ void move_manual(key_t key) {
 	int nx, ny;
 	nx = px[0] + dx[dir];
 	ny = py[0] + dy[dir];
+
+	//움직여도되면 움직이게 설계
+	bool safezone;
+	safezone = get_safezone(0, nx, ny);
+
 	if (!placable(nx, ny)) {
 		return;
 	}
-
-	move_tail(0, nx, ny);
+	if (life == true) {
+		if (tick < 2450 && tick >= 500) {
+			move_tail(0, nx, ny);
+		}
+		else if (tick >= 2450) {
+			
+			if (safezone == false) {
+				kill_tail(0, nx, ny);
+				char fullMessage[100] = "";
+				sprintf_s(fullMessage, sizeof(fullMessage), " %d player, 0 dead! ", n_alive);
+				killdialog(fullMessage);
+			}
+			else {
+				move_tail(0, nx, ny);
+			}
+		}
+	}
 }
 
 bool getlife(int p) {
@@ -143,6 +167,32 @@ bool getlife(int p) {
 		return false;
 	}
 }
+
+bool get_safezone(int p,int nx,int ny) {
+	int safe_buf[ROW_MAX][COL_MAX] = { 0 }; // 배열 초기화
+	int move_buf[ROW_MAX][COL_MAX] = { 0 }; // 배열 초기화
+	move_buf[nx][ny] = 1;
+	int ux;
+
+	for (int i = 0; i < n_player; i++) {
+		if (player[i] == true) {
+			for (int j = 1; j < 15; j++) {
+				for (int k = py[i]; k < 50; k++) {
+					if (j == px[i]) {
+						safe_buf[j][k] = 1;
+					}
+				}
+			}
+		}
+		
+	}
+
+	if (move_buf[nx][ny] == safe_buf[nx][ny]){
+		return true;
+	}
+	return false;
+}
+
 // 0 <= dir < 4가 아니면 랜덤
 void move_random(int player, int dir) {
 	int p = player;  // 이름이 길어서...
@@ -183,54 +233,6 @@ void move_random(int player, int dir) {
 }
 
 //10프로 확률로만 움직임
-/*
-void move_stop(int player, int dir) {
-	int p = player;  // 이름이 길어서...
-	int nx, ny;  // 움직여서 다음에 놓일 자리
-	int kill = 0;
-	bool life = true;
-	life = getlife(p);
-	// 움직일 공간이 없는 경우는 없다고 가정(무한 루프에 빠짐)	
-	if (life == true) {
-		do {
-			int random_num = randint(1, 10);
-			if (random_num == 1) {
-				int random_num2 = randint(1, 10);
-				if (random_num2 == 1) {
-					// 10% 확률로 위로 이동
-					nx = px[p] - 1;
-					ny = py[p];
-				}
-				else if (random_num2 == 2) {
-					// 10% 확률로 아래로 이동
-					nx = px[p] + 1;
-					ny = py[p];
-				}
-				else {
-					// 나머지 경우에는 왼쪽으로 이동
-					nx = px[p];
-					ny = py[p] - 1;
-				}
-				kill = 1;
-			}
-			else {
-				// 나머지 경우에는 정지
-				nx = px[p];
-				ny = py[p];
-			}
-		} while (!placable(nx, ny));
-
-		if (kill == 1) {
-			kill_tail(p, nx, ny);
-			kill  = 0;
-		}
-		else {
-			move_tail(p, nx, ny);
-			kill = 0;
-		}
-	}
-}
-*/
 void move_stop(int player, int dir) {
 	int p = player;
 	int nx, ny;
@@ -265,9 +267,17 @@ void move_stop(int player, int dir) {
 			ny = py[p];
 		}
 
+		bool safezone;
+		safezone = get_safezone(p, nx, ny);
+
 		if (placable(nx, ny)) {
 			if (kill == 1) {
-				kill_tail(p, nx, ny);
+				if (safezone == true) {
+					move_tail(p, nx, ny);
+				}
+				else {
+					kill_tail(p, nx, ny);
+				}
 			}
 			else {
 				move_tail(p, nx, ny);
@@ -318,7 +328,7 @@ void mugunghwa() {
 				break;
 			}
 			else if (key != K_UNDEFINED) {
-				move_manual(key);
+				move_manual(key,tick);
 			}
 
 			
@@ -369,8 +379,6 @@ void mugunghwa() {
 					move_stop(i, 0);
 				}
 			}
-
-			//killdialog("playerdied");
 			
 			say_mugung(tick);
 			display();
@@ -380,13 +388,6 @@ void mugunghwa() {
 			if (tick > 4000) {
 				tick = 500;
 			}
-
-			printf("%d", tick);
+			//printf("%d", tick);
 		}
 }
-
-
-
-
-
-
