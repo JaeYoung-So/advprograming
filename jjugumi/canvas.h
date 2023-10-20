@@ -25,5 +25,6 @@ void display(void);
 void gotoxy(int x, int y);
 void printxy(char ch, int row, int col);
 void dialog(char message[]);
+void killdialog(char message[]);
 
 #endif

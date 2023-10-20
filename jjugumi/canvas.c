@@ -54,7 +54,7 @@ bool placable(int row, int col) {
 // 상단에 맵을, 하단에는 현재 상태를 출력
 void display(void) {
 	draw();
-	gotoxy(N_ROW + 4, 0);  // 추가로 표시할 정보가 있으면 맵과 상태창 사이의 빈 공간에 출력
+	gotoxy(N_ROW + 4, 0); // 추가로 표시할 정보가 있으면 맵과 상태창 사이의 빈 공간에 출력
 	print_status();
 }
 
@@ -72,7 +72,13 @@ void draw(void) {
 void print_status(void) {
 	printf("no. of players left: %d\n", n_alive);
 	for (int p = 0; p < n_player; p++) {
-		printf("player %2d: %5s\n", p, player[p] ? "alive" : "DEAD");		
+		if (win[p] == true) {
+			printf("player %2d: %5s\n", p, win[p] ? "Win" : "false");
+		}
+		else {
+			printf("player %2d: %5s\n", p, player[p] ? "alive" : "DEAD");
+		}
+		
 	}
 }
 
@@ -84,20 +90,41 @@ void dialog(char message[]) {
 		int message_row = 5;
 		int message_col = 5;
 
-		//draw();
-
 		// 화면 출력
 		gotoxy(message_row, message_col);
-		printf("**************************");
+		printf("****************************************");
 		gotoxy(message_row + 1, message_col);
-		printf("    %s", message);
+		printf("% s", message);
 		printf(" %d ", remaining_time);
 		gotoxy(message_row + 2, message_col);
-		printf("**************************");
+		printf("****************************************");
 
 		Sleep(1000); 
 		remaining_time--;
 
-		//draw();
 	}
+}
+//킬로그표시
+void killdialog(char message[]) {
+	
+	int message_row = 5;
+	int message_col = 5;
+
+	// 화면 출력
+	gotoxy(message_row, message_col);
+	printf("****************************************");
+	gotoxy(message_row + 1, message_col);
+	printf("     % s",message);
+	gotoxy(message_row + 2, message_col);
+	printf("****************************************");
+
+	Sleep(3000);
+
+	gotoxy(message_row, message_col);
+	printf("                                        ");
+	gotoxy(message_row + 1, message_col);
+	printf("                                        ");
+	gotoxy(message_row + 2, message_col);
+	printf("                                        ");
+
 }

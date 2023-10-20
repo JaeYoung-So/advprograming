@@ -8,8 +8,10 @@
 
 #define	DATA_FILE	"jjuggumi.dat"
 
+char messeage[100];
 int jjuggumi_init(void);
 
+void ending(char mes[]);
 // low 이상 high 이하 난수를 발생시키는 함수
 int randint(int low, int high) {
 	int rnum = rand() % (high - low + 1) + low;
@@ -30,7 +32,8 @@ int jjuggumi_init(void) {
 }
 
 void intro() {
-	printf("             ___\n");
+	system("cls");
+	printf("                        ___\n");
 	printf("                     .-'   `'.\n");
 	printf("                    /         \\\n");
 	printf("                    |         ;\n");
@@ -43,7 +46,7 @@ void intro() {
 	printf("        | |  .' _.-' |  |  \\  \\  '.               `~---`\n");
 	printf("         \\ \\/ .'     \\  \\   '. '-._)\n");
 	printf("          \\/ /        \\  \\    `=__`~-.\n");
-	printf("     jgs  / /\\         `) )    / / `\"\".`\\\n");
+	printf("          / /\\         `) )    / / `\"\".`\\\n");
 	printf("    , _.-'.'\\ \\        / /    ( (     / /\n");
 	printf("     `--~`   ) )    .-'.'      '.'.  | (\n");
 	printf("            (/`    ( (`          ) )  '-;\n");
@@ -51,28 +54,31 @@ void intro() {
 
 	
 	Sleep(2000); 
-	system("cls");
 	
-	printf("*********************************\n");
-	printf("쭈꾸미 게임에 오신 걸 환영합니다.\n");
-	printf("*********************************\n");
+	printf("          *********************************\n");
+	printf("          쭈꾸미 게임에 오신 걸 환영합니다.\n");
+	printf("          *********************************\n");
 	Sleep(3000);
 
 	system("cls");
-	return 0;
 }
-void ending() {
+void ending(char messeage[]) {
+	system("cls");
+	printf("          *********************************\n");
+	printf("           %s 번 플레이어가 승리하였습니다.\n",messeage);
+	printf("          *********************************\n");
+	Sleep(3000);
 
 }
-
 int main(void) {
+	char gammer[100];
 	jjuggumi_init();
 	intro();
-	sample(1);
-	//mugunghwa();
+	//sample(1);
+	mugunghwa();
 	//nightgame();
 	//juldarigi();
 	//jebi();
-	ending();
+	ending(messeage);
 	return 0;
 }
